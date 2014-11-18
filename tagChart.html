@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script>
+      $(document).ready(function () {
+      
+        $.getJSON('http://cooper-union-instagram-proxy.herokuapp.com/search/tag/nyc?count=100', function(photos){
+
+
+          var brooklyn = 0;
+          var bronx = 0;
+          var manhattan = 0;
+          var queens = 0;
+          var statenisland = 0;
+
+          for(i in photos) {
+            console.log(photos[i].tags);
+            for(j in photos[i].tags) {
+              if(photos[i].tags[j].toLowerCase() == "brooklyn") {
+                brooklyn++;
+              }
+              if(photos[i].tags[j].toLowerCase() == "bronx") {
+                bronx++;
+              }
+              if(photos[i].tags[j].toLowerCase() == "manhattan") {
+                manhattan++;
+              }
+              if(photos[i].tags[j].toLowerCase() == "queens") {
+                queens++;
+              }
+              if(photos[i].tags[j].toLowerCase() == "statenisland") {
+                statenisland++;
+              }
+            }
+
+          }
+
+          var data = [
+            ['Brooklyn', brooklyn],
+            ['Bronx', bronx],
+            ['Manhattan', manhattan],
+            ['Queens', queens],
+            ['Staten Island', statenisland],
+          ]
+
+          $('#container').highcharts({
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: 1,//null,
+                    plotShadow: false
+                },
+                title: {
+                    text: 'The last 100 Instagram photos tagged with "NYC", and the borough they are from.'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                            style: {
+                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                            }
+                        }
+                    }
+                },
+                series: [{
+                    type: 'pie',
+                    name: 'Browser share',
+                    data: data
+                }]
+            });
+
+
+
+
+        });
+      });
+    </script>
+  </head>
+  <body>
+<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+  </body>
+</html>
